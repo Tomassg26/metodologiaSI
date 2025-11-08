@@ -3,22 +3,17 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/java
 trigger:
-- main   # Ejecutar automáticamente al hacer push en la rama main
+- main
 
 pool:
-  vmImage: ubuntu-latest   # Usa una máquina virtual de Ubuntu
+  vmImage: ubuntu-latest
 
 jobs:
-- job: ParallelTesting
-  displayName: "Ejecución paralela de ejemplo"
+- job: TestParalelo
+  displayName: "Ejecutar pruebas en paralelo"
   strategy:
-    parallel: 2   # 🔹 Ejecuta 2 trabajos en paralelo
+    parallel: 3   # ← Esto crea 3 trabajos paralelos
   steps:
-  - script: echo "Inicio del trabajo paralelo ${{ strategy.jobIndex }}"
-    displayName: "Inicio del job"
-
-  - script: echo "Simulando ejecución de pruebas en job ${{ strategy.jobIndex }}..."
-    displayName: "Ejecutando pruebas ficticias"
-  
-  - script: echo "Finalizando trabajo ${{ strategy.jobIndex }}"
-    displayName: "Finalización del job"
+    - script: echo "Inicio del trabajo paralelo $(strategy.jobIndex)"
+    - script: echo "Simulando ejecución de pruebas en job $(strategy.jobIndex)..."
+    - script: echo "Finalizando trabajo $(strategy.jobIndex)"
