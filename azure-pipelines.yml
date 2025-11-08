@@ -2,26 +2,23 @@
 # Build your Java project and run tests with Apache Maven.
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/java
-
 trigger:
-- main
+- main   # Ejecutar automáticamente al hacer push en la rama main
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: ubuntu-latest   # Usa una máquina virtual de Ubuntu
 
 jobs:
 - job: ParallelTesting
+  displayName: "Ejecución paralela de ejemplo"
   strategy:
-    parallel: 2 
+    parallel: 2   # 🔹 Ejecuta 2 trabajos en paralelo
   steps:
-  - task: VSBuild@1
-    inputs:
-      solution: '**/*.sln'
+  - script: echo "Inicio del trabajo paralelo ${{ strategy.jobIndex }}"
+    displayName: "Inicio del job"
 
-  - task: VSTest@2
-    inputs:
-      testSelector: 'testAssemblies'
-      testAssemblyVer2: '**\*test*.dll'
-      searchFolder: '$(System.DefaultWorkingDirectory)'
-      diagnosticsEnabled: true
-      runInParallel: true  
+  - script: echo "Simulando ejecución de pruebas en job ${{ strategy.jobIndex }}..."
+    displayName: "Ejecutando pruebas ficticias"
+  
+  - script: echo "Finalizando trabajo ${{ strategy.jobIndex }}"
+    displayName: "Finalización del job"
