@@ -10,13 +10,23 @@ pool:
 
 jobs:
 - job: DemoParallel
-  displayName: "Demo de pruebas paralelas"
+  displayName: "Demostración de ejecución paralela"
   strategy:
-    parallel: 2   # Aquí se usan 2 agentes
+    parallel: 2    # Número de agentes paralelos
   steps:
-  - script: echo "Agent #${{ variables['System.JobPositionInPhase'] }} de ${ { variables['System.TotalJobsInPhase'] } } – Iniciando pruebas"
-    displayName: "Inicio"
-  - script: echo "Simulando ejecución de pruebas en este agente..."
-    displayName: "Ejecutar pruebas ficticias"
-  - script: echo "Agent #${{ variables['System.JobPositionInPhase'] }} – Finalizado"
+  - script: |
+      echo "====================================="
+      echo "🏁 Iniciando ejecución paralela"
+      echo "👉 Agente número: $SYSTEM_JOBPOSITIONINPHASE de $SYSTEM_TOTALJOBSINPHASE"
+      echo "====================================="
+    displayName: "Inicio de agente"
+
+  - script: |
+      echo "Ejecutando pruebas ficticias en este agente..."
+      sleep 5
+      echo "Pruebas completadas."
+    displayName: "Simulación de pruebas"
+
+  - script: |
+      echo "✅ Agente $SYSTEM_JOBPOSITIONINPHASE finalizado correctamente."
     displayName: "Finalización"
