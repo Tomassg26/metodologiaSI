@@ -4,19 +4,21 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/java
 
 trigger:
-- main
+- main  # o el nombre de tu rama principal
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'windows-latest'
 
-steps:
-- task: Maven@3
-  inputs:
-    mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.11'
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'package'
+jobs:
+- job: Build
+  steps:
+  - task: VSBuild@1
+    inputs:
+      solution: '**/*.sln'
+
+  - task: VSTest@2
+    inputs:
+      testSelector: 'testAssemblies'
+      testAssemblyVer2: '**\*test*.dll'
+      searchFolder: '$(System.DefaultWorkingDirectory)'
+      diagnosticsEnabled: true
