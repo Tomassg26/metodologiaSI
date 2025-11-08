@@ -9,11 +9,14 @@ pool:
   vmImage: ubuntu-latest
 
 jobs:
-- job: TestParalelo
-  displayName: "Ejecutar pruebas en paralelo"
+- job: DemoParallel
+  displayName: "Demo de pruebas paralelas"
   strategy:
-    parallel: 3   # ← Esto crea 3 trabajos paralelos
+    parallel: 2   # Aquí se usan 2 agentes
   steps:
-    - script: echo "Inicio del trabajo paralelo $(strategy.jobIndex)"
-    - script: echo "Simulando ejecución de pruebas en job $(strategy.jobIndex)..."
-    - script: echo "Finalizando trabajo $(strategy.jobIndex)"
+  - script: echo "Agent #${{ variables['System.JobPositionInPhase'] }} de ${ { variables['System.TotalJobsInPhase'] } } – Iniciando pruebas"
+    displayName: "Inicio"
+  - script: echo "Simulando ejecución de pruebas en este agente..."
+    displayName: "Ejecutar pruebas ficticias"
+  - script: echo "Agent #${{ variables['System.JobPositionInPhase'] }} – Finalizado"
+    displayName: "Finalización"
