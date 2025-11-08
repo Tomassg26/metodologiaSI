@@ -4,13 +4,15 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/java
 
 trigger:
-- main  # o el nombre de tu rama principal
+- main
 
 pool:
   vmImage: 'windows-latest'
 
 jobs:
-- job: Build
+- job: ParallelTesting
+  strategy:
+    parallel: 2 
   steps:
   - task: VSBuild@1
     inputs:
@@ -22,3 +24,4 @@ jobs:
       testAssemblyVer2: '**\*test*.dll'
       searchFolder: '$(System.DefaultWorkingDirectory)'
       diagnosticsEnabled: true
+      runInParallel: true  
