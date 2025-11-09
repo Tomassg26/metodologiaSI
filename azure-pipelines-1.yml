@@ -9,31 +9,16 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-jobs:  
-- job: Build
-  displayName: Build Maven Project
-  steps:
-  - task: Maven@4
-    displayName: 'Maven Package'
-    inputs:
-      mavenPomFile: 'pom.xml'
-  - task: CopyFiles@2
-    displayName: 'Copy Files to artifact staging directory'
-    inputs:
-      SourceFolder: '$(System.DefaultWorkingDirectory)'
-      Contents: '**/target/*.?(war|jar)'
-      TargetFolder: $(Build.ArtifactStagingDirectory)
-  - upload: $(Build.ArtifactStagingDirectory)
-    artifact: drop- main
+jobs:
+- deployment: DeployToVM
+  displayName: Test deploy to VM
+  environment: 'Metodologia'
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        - script: echo "deploy ejecutado" > deploy.txt
+          displayName: "Create deploy file in VM"
 
-pool:
-  vmImage: ubuntu-latest
-
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+        - script: ls -la
+          displayName: "List files"
